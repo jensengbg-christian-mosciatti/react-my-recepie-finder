@@ -1,4 +1,4 @@
-import { useCallback, useReducer } from 'react'
+import { useCallback, useEffect, useMemo, useReducer } from 'react'
 import axios from 'axios'
 import recepieReducer from './recepieReducer'
 
@@ -25,9 +25,9 @@ function useRecepieDataManager() {
     dispatch({ type: 'removeIngredient', id })
   }
 
-  function searchRecepie() {
-    fetchData()
-  }
+  // function searchRecepie() {
+  //   fetchData()
+  // }
 
   function urlEncode(str) {
     return encodeURIComponent(str).replace(/[!'()*]/g, function (c) {
@@ -51,7 +51,7 @@ function useRecepieDataManager() {
     dispatch({ type: 'setRecepieLink', data: { data: result.data, id: index } })
   }
 
-  const getQueryString = useCallback(() => {
+  const getQueryString = useMemo(() => {
     let string = ''
     if (queryIngredients.length) string = `i=${queryIngredients.join()}`
     if (queryDish)
@@ -60,28 +60,33 @@ function useRecepieDataManager() {
   }, [queryIngredients, queryDish])
 
   const fetchData = useCallback(async () => {
+    // const fetchData = async () => {
     // https://cors-anywhere.herokuapp.com/
     // https://europe-west1-cors-anywhere-chrimox.cloudfunctions.net/proxyWithCorsAnywhere/
-    // console.log(queryDish, getQueryString())
     let result = await axios({
       method: 'get',
-      url: `https://europe-west1-cors-anywhere-chrimox.cloudfunctions.net/proxyWithCorsAnywhere/www.recipepuppy.com/api/?${getQueryString()}`,
+      url: `https://europe-west1-cors-anywhere-chrimox.cloudfunctions.net/proxyWithCorsAnywhere/www.recipepuppy.com/api/?${getQueryString}`,
       headers: {
         'Content-Type': 'text/html',
         'Access-Control-Allow-Origin': '*',
         'X-Requested-With': '',
       },
     })
-    // console.log(result.data.results)
     dispatch({ type: 'setRecepieList', data: result.data.results })
+    // }
     // result.data.results.map((recepie, index) =>
     //   fetchPrettyLinks(recepie.href, index)
     // )
   }, [getQueryString])
 
-  // useEffect(() => {
-  //   fetchData()
-  // }, [fetchData])
+  const searchRecepie = () => {
+    console.log('manual recepie')
+    fetchData()
+  }
+
+  useEffect(() => {
+    fetchData()
+  }, [fetchData])
 
   return {
     recepies,

@@ -4,7 +4,6 @@ import { GlobalContext } from '../Store/GlobalState'
 
 const Form = forwardRef(({ isFixedHead }, ref) => {
   const {
-    queryDish,
     setDish,
     queryIngredients,
     addIngredient,
@@ -14,6 +13,16 @@ const Form = forwardRef(({ isFixedHead }, ref) => {
 
   // const [dish, setDish] = useState('')
   const [ingredient, setIngredient] = useState('')
+  const [localDish, setLocalDish] = useState('')
+  const [timer, setTimer] = useState(null)
+
+  const handleDish = (e) => {
+    setLocalDish(e.target.value)
+    if (e.target.value.length > 1) {
+      if (timer) clearTimeout(timer)
+      setTimer(setTimeout(() => setDish(e.target.value), 1500))
+    }
+  }
 
   const addIngredientToList = (event) => {
     event.preventDefault()
@@ -40,8 +49,8 @@ const Form = forwardRef(({ isFixedHead }, ref) => {
             id="dish"
             name="dish"
             type="text"
-            value={queryDish}
-            onChange={(e) => setDish(e.target.value)}
+            value={localDish}
+            onChange={handleDish}
           />
         </div>
         <div className="inputContainer">
@@ -67,9 +76,9 @@ const Form = forwardRef(({ isFixedHead }, ref) => {
             ))}
           </ul>
         </div>
-        <div>
+        {/* <div>
           <input className="btn btn--primary" type="submit" value="Search" />
-        </div>
+        </div> */}
       </form>
     </StyledRecepieList>
   )

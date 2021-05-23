@@ -4,13 +4,13 @@ import noImage from '../assets/noimage.jpg'
 function LinkCard({ recepie }) {
   const { thumbnail, title, href, ingredients } = recepie
 
-  function gotoUrl() {
+  const gotoUrl = () => {
     const newWindow = window.open(href, '_blank', 'noopener,noreferrer')
     if (newWindow) newWindow.opener = null
   }
 
   return (
-    <StyledCard onClick={() => gotoUrl()}>
+    <StyledCard onClick={gotoUrl}>
       <img src={thumbnail ? thumbnail : noImage} alt={title} />
       <div>
         <h4>{title}</h4>

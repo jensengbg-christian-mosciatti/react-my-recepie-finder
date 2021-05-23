@@ -112,6 +112,9 @@ function App() {
     // }, [handleScroll])
   }, [scrollDir, isFixedHead])
 
+  // const { searchRecepie } = useContext(GlobalContext)
+  // searchRecepie()
+
   return (
     <GlobalProvider>
       <GlobalStyle />
